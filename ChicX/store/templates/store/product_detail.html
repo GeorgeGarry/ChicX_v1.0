@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% extends 'store/main.html' %}
+    <meta charset="UTF-8">
+    <title>{{ product.name}}</title>
+
+    <style>
+        .color-radio {
+            display: inline-block;
+            position: relative;
+            margin-right: 10px;
+        }
+
+        .color-radio input[type="radio"] {
+            display: none;
+        }
+
+        .color-radio label {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #ddd;
+        }
+
+        .color-radio input[type="radio"]:checked + label {
+            border: 2px solid #000;
+        }
+
+
+
+
+
+    </style>
+</head>
+<body>
+
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                <div class="card-body">
+                    <h1 class="card-title">{{ product.name }}</h1>
+                    <p class="card-text">{{ product.description }}</p>
+
+                    <!-- Size Chart Section -->
+                    {% if product.productsizes.all %}
+                    <h3>Available Sizes</h3>
+                    <div class="form-group">
+                        <label for="sizeSelect">Select Size:</label>
+                        <select class="form-control" id="sizeSelect">
+                            {% for product_size in product.productsizes.all %}
+                            <option value="{{ product_size.size.name }}">{{ product_size.size.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endif %}
+
+                    <!-- Color Chart Section -->
+                    {% if product.productcolors.all %}
+                    <h3>Available Colors</h3>
+                    <div class="form-group">
+                        {% for product_color in product.productcolors.all %}
+                        <div class="color-radio">
+                            <input class="form-check-input" type="radio" name="colorOptions"
+                                   id="color{{ product_color.color.id }}" value="{{ product_color.color.name }}">
+                            <label class="form-check-label" for="color{{ product_color.color.id }}"
+                                   style="background-color: {{ product_color.color.hex_code }};"></label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <h4>${{ product.price }}</h4>
+                    <div class="d-flex justify-content-between mt-3">
+                        <button data-product="{{ product.id }}" data-action="add"
+                                class="btn btn-outline-secondary add-btn update-cart">Add to Cart
+                        </button>
+                        <a href="{% url 'store' %}" class="btn btn-outline-primary">Go Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+</body>
+</html>
